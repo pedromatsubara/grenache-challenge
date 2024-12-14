@@ -35,6 +35,7 @@ service.on("request", (rid, key, payload, handler) => {
   const matches = orderBook.addOrder(order);
 
   console.log(`Received order:`, order);
+  console.log(`Matches:`, matches);
 
   handler.reply(null, JSON.stringify(matches));
 });
@@ -48,17 +49,11 @@ setInterval(() => {
 
   console.log(order);
 
-  client.request(
+  client.map(
     "orderbook",
     JSON.stringify(order),
     { timeout: 10000 },
-    (err, res) => {
-      if (err) {
-        console.error("Error submitting order:", err.message);
-      } else {
-        console.log("Order matches received:", JSON.parse(res));
-      }
-    }
+    (err, res) => {}
   );
 }, 5000);
 

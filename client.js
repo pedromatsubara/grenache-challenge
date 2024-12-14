@@ -47,7 +47,7 @@ setInterval(() => {
     quantity: Math.ceil(Math.random() * 9),
   };
 
-  console.log(order);
+  console.log("\nOrder Created: ", order);
 
   client.map(
     "orderbook",

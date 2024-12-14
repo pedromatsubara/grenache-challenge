@@ -19,8 +19,12 @@ const port = 1024 + Math.floor(Math.random() * 1000);
 const service = peer.transport("server");
 service.listen(port);
 
-setInterval(() => {
-  link.announce("orderbook", service.port);
+const announceInterval = setInterval(() => {
+  link.announce("orderbook", service.port, (err) => {
+    if (err) {
+      console.error("Error announcing service:", err);
+    }
+  });
 }, 1000);
 console.log(`Service announced on port ${service.port}`);
 
@@ -57,3 +61,14 @@ setInterval(() => {
     }
   );
 }, 5000);
+
+function cleanup() {
+  console.log("Shutting instance down...");
+
+  clearInterval(announceInterval);
+  link.stop();
+  process.exit(0);
+}
+
+process.on("SIGINT", cleanup);
+process.on("SIGTERM", cleanup);
